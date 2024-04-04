@@ -14,7 +14,7 @@ resource "aws_appautoscaling_policy" "this" {
   service_namespace  = aws_appautoscaling_target.this.service_namespace
 
   target_tracking_scaling_policy_configuration {
-    target_value       = 50.0
+    target_value = 50.0
     # amount of time, in seconds, 
     # after a scale in or scale out activity has completed 
     # where further scaling activities are suspended

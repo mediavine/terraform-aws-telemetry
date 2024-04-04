@@ -77,20 +77,30 @@ variable "rule_group_namespaces" {
 variable "enable_internal_lb" {
   description = "Determines whether an internal load balancer will be created"
   type        = bool
-  default     = false  
+  default     = false
 }
 
 variable "name" {
   description = "The name of the load balancer"
   type        = string
-  default = "adot"
+  default     = "adot"
+
+  validation {
+    condition     = length(var.name) <= 9
+    error_message = "The name must b3 no more than 9 characters long."
+  }
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9]*$", var.name))
+    error_message = "The name must contain only alphanumeric characters."
+  }
 }
 
-variable "security_groups" {
-  description = "A list of security group IDs to associate with the load balancer"
-  type        = list(string)
-  default     = []
-}
+# variable "security_groups" {
+#   description = "A list of security group IDs to associate with the load balancer"
+#   type        = list(string)
+#   default     = []
+# }
 
 variable "subnets" {
   description = "A list of subnet IDs to associate with the load balancer"
@@ -121,25 +131,31 @@ variable "cluster" {
 variable "otel_collector_image" {
   description = "The image of the otel collector"
   type        = string
-  default     = "public.ecr.aws/aws-observability/aws-otel-collector:latest"
+  default     = "public.ecr.aws/aws-observability/aws-otel-collector:v0.38.1"
   # https://gallery.ecr.aws/aws-observability/aws-otel-collector
 }
 
 variable "otel_collector_cpu" {
   description = "The CPU units to reserve for the otel collector"
   type        = number
-  default     = 32
+  default     = 512
 }
 
 variable "otel_collector_memory" {
   description = "The memory to reserve for the otel collector"
   type        = number
-  default     = 256
+  default     = 1024
 }
 
 variable "adot_collector_command" {
   description = "The command to run the otel collector"
   type        = string
-  default     = "--config=/etc/ecs-amp-xray.yaml"
+  default     = "--config=/etc/ecs/ecs-amp-xray.yaml"
+}
+
+variable "amazon_prometheus_endpoint" {
+  description = "The endpoint of the prometheus workspace"
+  type        = string
+  default     = null
 }
 
