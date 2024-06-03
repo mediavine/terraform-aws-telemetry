@@ -31,4 +31,4 @@ jobs:
           SLACK_COLOR: ${{ job.status }}
           SLACK_CHANNEL: iac-guild
           SLACK_USERNAME: github-actions
-          SLACK_TITLE: Terraform-AWS-Grafana Tag & Release
+          SLACK_TITLE: Terraform-AWS-Telemetry Tag & Release
