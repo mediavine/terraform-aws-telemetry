@@ -27,7 +27,7 @@ output "lb_dns_name" {
   value       = try(aws_lb.this[0].dns_name, "")
 }
 
-output "lb_private_ipv4_address" {
-  description = "Private ip of the internal load balancer"
-  value       = try(aws_lb.this[0].private_ipv4_address, "")
-}
+# output "lb_private_ipv4_address" {
+#   description = "Private ip of the internal load balancer"
+#   value       = try(aws_lb.this[0].private_ipv4_address, "")
+# }
