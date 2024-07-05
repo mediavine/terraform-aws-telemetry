@@ -13,9 +13,15 @@ resource "aws_ecs_service" "this" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.this[0].arn
+    target_group_arn = aws_lb_target_group.health_check[0].arn
     container_name   = "otel-collector"
     container_port   = 13133
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.http[0].arn
+    container_name   = "otel-collector"
+    container_port   = 4318
   }
 }
 
@@ -57,6 +63,10 @@ resource "aws_ecs_task_definition" "this" {
         {
           containerPort = 4318
           hostPort      = 4318
+        },
+        {
+          containerPort = 4317
+          hostPort      = 4317
         },
         {
           containerPort = 13133

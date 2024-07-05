@@ -7,7 +7,7 @@ module "aws_telemetry_stack" {
 
   cluster = "s2s-staging-us-east-1"
   name    = "s2sCore"
-  subnets = ["subnet-09246dccc92094d78", "subnet-09b4bdae02c946dfb"]
-  vpc_id  = "vpc-05323c72071982c4d"
+  subnets = ["subnet-", "subnet-"]
+  vpc_id  = ""
 
 }
