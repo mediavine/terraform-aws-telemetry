@@ -12,7 +12,11 @@ resource "aws_lb" "this" {
   subnets            = var.subnets
 }
 
-resource "aws_lb_listener" "this" {
+################################################################################
+# LB Listener Rules
+################################################################################
+
+resource "aws_lb_listener" "health_check" {
   count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
 
   load_balancer_arn = aws_lb.this[0].arn
@@ -21,11 +25,28 @@ resource "aws_lb_listener" "this" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.this[0].arn
+    target_group_arn = aws_lb_target_group.health_check[0].arn
   }
 }
 
-resource "aws_lb_target_group" "this" {
+resource "aws_lb_listener" "http" {
+  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+
+  load_balancer_arn = aws_lb.this[0].arn
+  port              = 4318
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.http[0].arn
+  }
+}
+
+################################################################################
+# LB Target Groups
+################################################################################
+
+resource "aws_lb_target_group" "health_check" {
   count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
 
   name        = "${var.name}-internal-collector-tg"
@@ -42,6 +63,23 @@ resource "aws_lb_target_group" "this" {
     healthy_threshold   = 3
     unhealthy_threshold = 3
     matcher             = "200-399"
+  }
+
+  depends_on = [aws_lb.this]
+}
+
+resource "aws_lb_target_group" "http" {
+  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+
+  name        = "${var.name}-collector-http-tg"
+  port        = 4318
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = var.vpc_id
+
+  health_check {
+    matcher = "200-499" 
+    # we don't care about health checks the http port because health checks are on port 13133
   }
 
   depends_on = [aws_lb.this]
