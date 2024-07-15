@@ -6,7 +6,7 @@
         "Action": [
           "logs:*"
         ],
-        "Resource": "arn:aws:logs:*:${aws_account_id}:*"
+        "Resource":"arn:aws:logs:*:*:log-group:/ecs/${name}-otel-collector:*"
       }
     ]
   }
