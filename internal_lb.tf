@@ -56,7 +56,7 @@ resource "aws_lb_target_group" "health_check" {
   vpc_id      = var.vpc_id
 
   health_check {
-    path                = "/health"
+    path                = "/healthcheck"
     protocol            = "HTTP"
     interval            = 30
     timeout             = 10
@@ -79,7 +79,7 @@ resource "aws_lb_target_group" "http" {
 
   health_check {
     matcher = "200-499" 
-    # we don't care about health checks the http port because health checks are on port 13133
+    path = "/v1/metrics"
   }
 
   depends_on = [aws_lb.this]
