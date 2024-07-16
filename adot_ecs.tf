@@ -63,8 +63,7 @@ resource "aws_ecs_task_definition" "this" {
         options = {
           "awslogs-group"         = aws_cloudwatch_log_group.this[0].name
           "awslogs-region"        = var.region
-          "awslogs-stream"        = aws_cloudwatch_log_stream.this[0].name
-          "awslogs-stream-prefix" = "ecs"
+          "awslogs-stream-prefix" = aws_cloudwatch_log_stream.this[0].name
         }
       }
       portMappings = [
