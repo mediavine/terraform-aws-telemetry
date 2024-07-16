@@ -32,6 +32,13 @@ resource "aws_cloudwatch_log_group" "this" {
   retention_in_days = 7
 }
 
+resource "aws_cloudwatch_log_stream" "this" {
+  count = var.create_adot_service ? 1 : 0
+
+  name           = "otel-collector"
+  log_group_name = aws_cloudwatch_log_group.this[0].name
+}
+
 resource "aws_ecs_task_definition" "this" {
   count = var.create_adot_service ? 1 : 0
 
@@ -56,6 +63,7 @@ resource "aws_ecs_task_definition" "this" {
         options = {
           "awslogs-group"         = aws_cloudwatch_log_group.this[0].name
           "awslogs-region"        = var.region
+          "awslogs-stream"        = aws_cloudwatch_log_stream.this[0].name
           "awslogs-stream-prefix" = "ecs"
         }
       }

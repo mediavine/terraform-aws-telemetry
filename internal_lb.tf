@@ -78,8 +78,8 @@ resource "aws_lb_target_group" "http" {
   vpc_id      = var.vpc_id
 
   health_check {
-    matcher = "200-499" 
-    path = "/v1/metrics"
+    matcher = "200-499"
+    path    = "/v1/metrics"
   }
 
   depends_on = [aws_lb.this]
