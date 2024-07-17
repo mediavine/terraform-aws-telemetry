@@ -32,13 +32,6 @@ resource "aws_cloudwatch_log_group" "this" {
   retention_in_days = 7
 }
 
-resource "aws_cloudwatch_log_stream" "this" {
-  count = var.create_adot_service ? 1 : 0
-
-  name           = "otel-collector"
-  log_group_name = aws_cloudwatch_log_group.this[0].name
-}
-
 resource "aws_ecs_task_definition" "this" {
   count = var.create_adot_service ? 1 : 0
 
@@ -63,7 +56,7 @@ resource "aws_ecs_task_definition" "this" {
         options = {
           "awslogs-group"         = aws_cloudwatch_log_group.this[0].name
           "awslogs-region"        = var.region
-          "awslogs-stream-prefix" = aws_cloudwatch_log_stream.this[0].name
+          "awslogs-stream-prefix" = "ecs"
         }
       }
       portMappings = [
@@ -84,6 +77,10 @@ resource "aws_ecs_task_definition" "this" {
         {
           name  = "AWS_PROMETHEUS_ENDPOINT"
           value = var.amazon_prometheus_endpoint == null ? "${aws_prometheus_workspace.this[0].prometheus_endpoint}api/v1/remote_write" : "${var.amazon_prometheus_endpoint}api/v1/remote_write"
+        },
+        {
+          name = "AWS_REGION"
+          value = var.amazon_prometheus_endpoint_region
         }
       ]
     }

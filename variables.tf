@@ -159,3 +159,10 @@ variable "amazon_prometheus_endpoint" {
   default     = null
 }
 
+variable "amazon_prometheus_endpoint_region" {
+  description = "The region of the prometheus workspace"
+  type        = string
+  default     = "us-east-1"
+  
+}
+
