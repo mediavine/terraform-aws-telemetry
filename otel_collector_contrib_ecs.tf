@@ -1,5 +1,37 @@
+locals {
+  default_config_environment = [
+    {
+      name  = "AWS_REGION"
+      value = var.region
+    }
+  ]
+
+  custom_config_environment = [
+
+    {
+      name      = "CUSTOM_OTEL_CONFIG"
+      valueFrom = "${aws_ssm_parameter.custom_otel_config.arn}"
+    }
+  ]
+}
+
+resource "random_string" "this" {
+  length  = 7
+  special = false
+  upper   = true
+  lower   = false
+}
+
+resource "aws_ssm_parameter" "custom_otel_config" {
+  count = var.custom_otel_config != null ? 1 : 0
+
+  name  = "CUSTOM_OTEL_CONFIG_${random_string.this.result}"
+  type  = "String"
+  value = file(var.custom_otel_config.otel_config_file_path)
+}
+
 resource "aws_ecs_service" "this" {
-  count = var.create_adot_service ? 1 : 0
+  count = var.create_otel_collector_service ? 1 : 0
 
   name            = "${var.name}-otel-collector"
   cluster         = var.cluster
@@ -26,16 +58,16 @@ resource "aws_ecs_service" "this" {
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-  count = var.create_adot_service ? 1 : 0
+  count = var.create_otel_collector_service ? 1 : 0
 
   name              = "/ecs/${var.name}-otel-collector"
   retention_in_days = 7
 }
 
 resource "aws_ecs_task_definition" "this" {
-  count = var.create_adot_service ? 1 : 0
+  count = var.create_otel_collector_service ? 1 : 0
 
-  family                   = "${var.name}-otel-collector"
+  family                   = "${var.name}-otel-collector-contrib"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = var.otel_collector_cpu
@@ -46,11 +78,11 @@ resource "aws_ecs_task_definition" "this" {
   container_definitions = jsonencode([
     {
       name      = "otel-collector"
-      image     = var.adot_collector_image
+      image     = var.otel_collector_image
       cpu       = var.otel_collector_cpu
       memory    = var.otel_collector_memory
       essential = true
-      command   = [var.adot_collector_command]
+      command   = var.custom_otel_config != null ? ["--config=env:${aws_ssm_parameter.custom_otel_config[0].arn}"] : []
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -73,16 +105,7 @@ resource "aws_ecs_task_definition" "this" {
           hostPort      = 13133
         },
       ]
-      environment = [
-        {
-          name  = "AWS_PROMETHEUS_ENDPOINT"
-          value = var.amazon_prometheus_endpoint == null ? "${aws_prometheus_workspace.this[0].prometheus_endpoint}api/v1/remote_write" : "${var.amazon_prometheus_endpoint}api/v1/remote_write"
-        },
-        {
-          name  = "AWS_REGION"
-          value = var.amazon_prometheus_endpoint_region
-        }
-      ]
+      environment = var.custom_otel_config != null ? local.custom_config_environment : local.default_config_environment
     }
   ])
 }
