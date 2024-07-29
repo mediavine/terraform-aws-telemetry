@@ -192,6 +192,34 @@ variable "custom_otel_config" {
   type = list(object({
     otel_config_file_path = string
   }))
-
   default = null
+}
+
+variable "desired_count" {
+  description = "The number of instances of the task definition to place and keep running"
+  type        = number
+  default     = 3
+}
+
+variable "austoscaling_configuration" {
+  type = list(object({
+    min_capacity = number
+    max_capacity = number
+    cpu_threshold_value = number
+    memory_threshold_value = number
+    scale_in_cooldown = number
+    scale_out_cooldown = number
+  }))
+  
+  description = "The autoscaling configuration"
+  default = [
+    {
+      min_capacity = 3
+      max_capacity = 10
+      cpu_threshold_value = 50
+      memory_threshold_value = 50
+      scale_in_cooldown = 300
+      scale_out_cooldown = 300
+    }
+  ]
 }

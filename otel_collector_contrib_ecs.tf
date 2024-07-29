@@ -37,7 +37,7 @@ resource "aws_ecs_service" "otel_collector_ecs_service" {
   cluster         = var.cluster
   task_definition = aws_ecs_task_definition.otel_collector_task_definition[0].arn
   launch_type     = "FARGATE"
-  desired_count   = 3
+  desired_count   = var.desired_count
   network_configuration {
     subnets          = var.subnets
     security_groups  = [aws_security_group.this[0].id]

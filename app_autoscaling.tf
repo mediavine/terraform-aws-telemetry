@@ -54,16 +54,3 @@ resource "aws_appautoscaling_policy" "memory_utilization" {
   }
 }
 
-variable "austoscaling_configuration" {
-  type = list(object({
-    min_capacity = number
-    max_capacity = number
-    cpu_threshold_value = number
-    memory_threshold_value = number
-    scale_in_cooldown = number
-    scale_out_cooldown = number
-  }))
-  
-  description = "The autoscaling configuration"
-  default = []
-}
