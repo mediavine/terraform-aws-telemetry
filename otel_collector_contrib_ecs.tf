@@ -30,12 +30,12 @@ resource "aws_ssm_parameter" "custom_otel_config" {
   value = file(var.custom_otel_config.otel_config_file_path)
 }
 
-resource "aws_ecs_service" "this" {
+resource "aws_ecs_service" "otel_collector_ecs_service" {
   count = var.create_otel_collector_service ? 1 : 0
 
   name            = "${var.name}-otel-collector"
   cluster         = var.cluster
-  task_definition = aws_ecs_task_definition.this[0].arn
+  task_definition = aws_ecs_task_definition.otel_collector_task_definition[0].arn
   launch_type     = "FARGATE"
   desired_count   = 3
   network_configuration {
@@ -57,14 +57,14 @@ resource "aws_ecs_service" "this" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "this" {
+resource "aws_cloudwatch_log_group" "otel_collector_log_group" {
   count = var.create_otel_collector_service ? 1 : 0
 
   name              = "/ecs/${var.name}-otel-collector"
   retention_in_days = 7
 }
 
-resource "aws_ecs_task_definition" "this" {
+resource "aws_ecs_task_definition" "otel_collector_task_definition" {
   count = var.create_otel_collector_service ? 1 : 0
 
   family                   = "${var.name}-otel-collector-contrib"
@@ -86,7 +86,7 @@ resource "aws_ecs_task_definition" "this" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.this[0].name
+          "awslogs-group"         = aws_cloudwatch_log_group.otel_collector_log_group[0].name
           "awslogs-region"        = var.region
           "awslogs-stream-prefix" = "ecs"
         }
