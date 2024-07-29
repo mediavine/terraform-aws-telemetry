@@ -13,12 +13,6 @@ resource "aws_ecs_service" "adot_ecs_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.health_check[0].arn
-    container_name   = "otel-collector"
-    container_port   = 13133
-  }
-
-  load_balancer {
     target_group_arn = aws_lb_target_group.http[0].arn
     container_name   = "otel-collector"
     container_port   = 4318

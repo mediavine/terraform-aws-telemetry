@@ -120,6 +120,11 @@ variable "create_adot_service" {
   description = "Determines whether the ECS service will be created"
   type        = bool
   default     = false
+
+  validation {
+    condition     = !(var.create_adot_service && var.create_otel_collector_service)
+    error_message = "Only one of 'create_adot_service' or 'create_otel_collector_service' can be true."
+  }
 }
 
 variable "cluster" {
@@ -176,6 +181,11 @@ variable "create_otel_collector_service" {
   description = "If true creates ecs service for otel-collector-contrib"
   type        = bool
   default     = false
+
+  validation {
+    condition     = !(var.create_adot_service && var.create_otel_collector_service)
+    error_message = "Only one of 'create_adot_service' or 'create_otel_collector_service' can be true."
+  }
 }
 
 variable "custom_otel_config" {
