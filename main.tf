@@ -1,5 +1,10 @@
 locals {
   workspace_id = var.create_prometheus && var.create_workspace ? aws_prometheus_workspace.this[0].id : var.workspace_id
+  
+  # if this is true, then this will error
+  # only one otel collector service at a time
+  # validation is added to the variable "validate_otel_collector_service"
+  ecs_service_validator = !(var.create_adot_service && var.create_otel_collector_service)
 }
 
 ################################################################################
