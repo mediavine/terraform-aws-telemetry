@@ -14,7 +14,7 @@ locals {
     }
   ]
 
-  environment = var.custom_otel_config[0].otel_config_file_path != null ? jsonencode(local.custom_config_environment) : jsonencode(local.default_config_environment)
+  environment = var.custom_otel_config[0].otel_config_file_path != null ? local.custom_config_environment : local.default_config_environment
 }
 
 resource "random_string" "this" {
@@ -104,4 +104,8 @@ resource "aws_ecs_task_definition" "otel_collector_task_definition" {
       environment = local.environment
     }
   ])
+}
+
+output "local_env_test" {
+  value = local.environment
 }
