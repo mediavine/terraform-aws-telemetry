@@ -10,7 +10,7 @@ locals {
 
     {
       name      = "CUSTOM_OTEL_CONFIG"
-      valueFrom = "${aws_ssm_parameter.custom_otel_config.arn}"
+      valueFrom = "${aws_ssm_parameter.custom_otel_config[0].arn}"
     }
   ]
 }
@@ -27,7 +27,7 @@ resource "aws_ssm_parameter" "custom_otel_config" {
 
   name  = "CUSTOM_OTEL_CONFIG_${random_string.this.result}"
   type  = "String"
-  value = file(var.custom_otel_config.otel_config_file_path)
+  value = file(var.custom_otel_config[0].otel_config_file_path)
 }
 
 resource "aws_ecs_service" "otel_collector_ecs_service" {

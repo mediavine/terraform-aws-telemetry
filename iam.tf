@@ -48,7 +48,7 @@ resource "aws_iam_policy" "task_execution" {
   policy = templatefile("${path.module}/policies/ecs_full_access.json", {
     aws_account_id = data.aws_caller_identity.current.account_id,
     cluster        = var.cluster,
-    service_name   = aws_ecs_service.this[0].name,
+    service_name   = var.create_adot_service ? aws_ecs_service.adot_ecs_service[0].name : aws_ecs_service.otel_collector_ecs_service[0].name,
   })
 }
 ################################################################################

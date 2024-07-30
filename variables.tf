@@ -182,7 +182,9 @@ variable "custom_otel_config" {
   type = list(object({
     otel_config_file_path = string
   }))
-  default = null
+  default = [{
+    otel_config_file_path = "/"
+  }]
 }
 
 variable "desired_count" {
@@ -191,36 +193,25 @@ variable "desired_count" {
   default     = 3
 }
 
-variable "austoscaling_configuration" {
+variable "autoscaling_configuration" {
   type = list(object({
-    min_capacity = number
-    max_capacity = number
-    cpu_threshold_value = number
+    min_capacity           = number
+    max_capacity           = number
+    cpu_threshold_value    = number
     memory_threshold_value = number
-    scale_in_cooldown = number
-    scale_out_cooldown = number
+    scale_in_cooldown      = number
+    scale_out_cooldown     = number
   }))
-  
+
   description = "The autoscaling configuration"
   default = [
     {
-      min_capacity = 3
-      max_capacity = 10
-      cpu_threshold_value = 50
+      min_capacity           = 3
+      max_capacity           = 10
+      cpu_threshold_value    = 50
       memory_threshold_value = 50
-      scale_in_cooldown = 300
-      scale_out_cooldown = 300
+      scale_in_cooldown      = 300
+      scale_out_cooldown     = 300
     }
   ]
-}
-
-variable "validate_otel_collector_service" {
-  description = "Validation to ensure only one of the service flags is true"
-  type        = bool
-  default     = true
-
-  validation {
-    condition = local.ecs_service_validator
-    error_message = "Only one of 'create_adot_service' or 'create_otel_collector_service' can be true."
-  }
 }
