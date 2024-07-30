@@ -9,12 +9,12 @@ locals {
   custom_config_environment = [
 
     {
-      name      = "CUSTOM_OTEL_CONFIG",
-      valueFrom = "${aws_ssm_parameter.custom_otel_config[0].arn}"
+      name      = "CUSTOM_OTEL_CONFIG"
+      valueFrom = aws_ssm_parameter.custom_otel_config[0].arn
     }
   ]
 
-  environment = var.custom_otel_config[0].otel_config_file_path != null ? local.custom_config_environment : local.default_config_environment
+  environment = var.custom_otel_config[0].otel_config_file_path != null ? jsonencode(local.custom_config_environment) : jsonencode(local.default_config_environment)
 }
 
 resource "random_string" "this" {
