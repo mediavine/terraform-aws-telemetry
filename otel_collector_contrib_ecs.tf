@@ -101,7 +101,7 @@ resource "aws_ecs_task_definition" "otel_collector_task_definition" {
           hostPort      = 13133
         },
       ]
-      environment = local.environment
+      environment = local.custom_config_environment
     }
   ])
 }
