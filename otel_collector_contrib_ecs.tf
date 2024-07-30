@@ -78,7 +78,7 @@ resource "aws_ecs_task_definition" "otel_collector_task_definition" {
       cpu       = var.otel_collector_cpu
       memory    = var.otel_collector_memory
       essential = true
-      command   = var.custom_otel_config != null ? ["--config=env:${aws_ssm_parameter.custom_otel_config[0].arn}"] : []
+      command   = var.custom_otel_config != null ? ["--config=env:CUSTOM_OTEL_CONFIG"] : []
       logConfiguration = {
         logDriver = "awslogs"
         options = {
