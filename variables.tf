@@ -183,7 +183,7 @@ variable "custom_otel_config" {
     otel_config_file_path = string
   }))
   default = [{
-    otel_config_file_path = ""
+    otel_config_file_path = null
   }]
 }
 

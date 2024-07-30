@@ -13,6 +13,8 @@ locals {
       valueFrom = "${aws_ssm_parameter.custom_otel_config[0].arn}"
     }
   ]
+
+  environment = var.custom_otel_config[0].otel_config_file_path != null ? local.custom_config_environment : local.default_config_environment
 }
 
 resource "random_string" "this" {
@@ -99,7 +101,7 @@ resource "aws_ecs_task_definition" "otel_collector_task_definition" {
           hostPort      = 13133
         },
       ]
-      environment = var.custom_otel_config != null ? local.custom_config_environment : local.default_config_environment
+      environment = local.environment
     }
   ])
 }
