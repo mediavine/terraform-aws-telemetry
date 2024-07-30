@@ -17,17 +17,17 @@ locals {
   environment = var.custom_otel_config[0].otel_config_file_path != null ? local.custom_config_environment : local.default_config_environment
 }
 
-resource "random_string" "this" {
-  length  = 7
-  special = false
-  upper   = true
-  lower   = false
-}
+# resource "random_string" "this" {
+#   length  = 7
+#   special = false
+#   upper   = true
+#   lower   = false
+# }
 
 resource "aws_ssm_parameter" "custom_otel_config" {
   count = var.custom_otel_config != null ? 1 : 0
 
-  name  = "CUSTOM_OTEL_CONFIG_${random_string.this.result}"
+  name  = "CUSTOM_OTEL_CONFIG_${var.region}"
   type  = "String"
   value = file(var.custom_otel_config[0].otel_config_file_path)
 }
@@ -101,7 +101,7 @@ resource "aws_ecs_task_definition" "otel_collector_task_definition" {
           hostPort      = 13133
         },
       ]
-      environment = concat(local.environment)
+      environment = local.environment
     }
   ])
 }
