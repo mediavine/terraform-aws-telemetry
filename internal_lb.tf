@@ -3,7 +3,7 @@ data "aws_vpc" "this" {
 }
 
 resource "aws_lb" "this" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   name               = "${var.name}-internal-collector-lb"
   internal           = true
@@ -30,7 +30,7 @@ resource "aws_lb" "this" {
 # }
 
 resource "aws_lb_listener" "http" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   load_balancer_arn = aws_lb.this[0].arn
   port              = 4318
