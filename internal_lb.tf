@@ -69,7 +69,7 @@ resource "aws_lb_listener" "http" {
 # }
 
 resource "aws_lb_target_group" "http" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   name        = "${var.name}-collector-http-tg"
   port        = 4318
@@ -90,7 +90,7 @@ resource "aws_lb_target_group" "http" {
 # Security Group & Rules
 ################################################################################
 resource "aws_security_group" "this" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   name        = "${var.name}-internal-collector-sg"
   description = "Security group for the internal collector load balancer"
@@ -98,7 +98,7 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_security_group_rule" "health_check" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   type              = "ingress"
   from_port         = 13133
@@ -109,7 +109,7 @@ resource "aws_security_group_rule" "health_check" {
 }
 
 resource "aws_security_group_rule" "http" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   type              = "ingress"
   from_port         = 4318
@@ -120,7 +120,7 @@ resource "aws_security_group_rule" "http" {
 }
 
 resource "aws_security_group_rule" "egress" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   type              = "egress"
   from_port         = 0
