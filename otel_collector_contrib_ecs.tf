@@ -9,7 +9,7 @@ locals {
   custom_config_environment = [
 
     {
-      name      = "CUSTOM_OTEL_CONFIG"
+      name      = "CUSTOM_OTEL_CONFIG",
       valueFrom = "${aws_ssm_parameter.custom_otel_config[0].arn}"
     }
   ]
