@@ -19,7 +19,7 @@ resource "aws_iam_policy" "cw_logs_policy" {
 resource "aws_iam_policy" "ssm_parameter_access" {
   count = var.create_adot_service || var.create_otel_collector_service ? 1 : 0
 
-  name        = "SSMParameterAccessPolicy"
+  name        = "SSMParameterAccessPolicy-otel-${var.region}"
   description = "Policy to allow access to custom OTEL config SSM parameter"
 
   policy = jsonencode({
