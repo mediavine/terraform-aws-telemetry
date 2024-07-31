@@ -128,11 +128,17 @@ variable "cluster" {
   default     = ""
 }
 
-variable "otel_collector_image" {
+variable "adot_collector_image" {
   description = "The image of the otel collector"
   type        = string
   default     = "public.ecr.aws/aws-observability/aws-otel-collector:v0.38.1"
   # https://gallery.ecr.aws/aws-observability/aws-otel-collector
+}
+
+variable "otel_collector_image" {
+  description = "The image of the otel collector"
+  type        = string
+  default     = "otel/opentelemetry-collector-contrib:0.87.0"
 }
 
 variable "otel_collector_cpu" {
@@ -163,6 +169,49 @@ variable "amazon_prometheus_endpoint_region" {
   description = "The region of the prometheus workspace"
   type        = string
   default     = "us-east-1"
-  
+
 }
 
+variable "create_otel_collector_service" {
+  description = "If true creates ecs service for otel-collector-contrib"
+  type        = bool
+  default     = false
+}
+
+variable "custom_otel_config" {
+  type = list(object({
+    otel_config_file_path = string
+  }))
+  default = [{
+    otel_config_file_path = null
+  }]
+}
+
+variable "desired_count" {
+  description = "The number of instances of the task definition to place and keep running"
+  type        = number
+  default     = 3
+}
+
+variable "autoscaling_configuration" {
+  type = list(object({
+    min_capacity           = number
+    max_capacity           = number
+    cpu_threshold_value    = number
+    memory_threshold_value = number
+    scale_in_cooldown      = number
+    scale_out_cooldown     = number
+  }))
+
+  description = "The autoscaling configuration"
+  default = [
+    {
+      min_capacity           = 3
+      max_capacity           = 10
+      cpu_threshold_value    = 50
+      memory_threshold_value = 50
+      scale_in_cooldown      = 300
+      scale_out_cooldown     = 300
+    }
+  ]
+}

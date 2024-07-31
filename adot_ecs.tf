@@ -1,21 +1,15 @@
-resource "aws_ecs_service" "this" {
+resource "aws_ecs_service" "adot_ecs_service" {
   count = var.create_adot_service ? 1 : 0
 
   name            = "${var.name}-otel-collector"
   cluster         = var.cluster
-  task_definition = aws_ecs_task_definition.this[0].arn
+  task_definition = aws_ecs_task_definition.adot_task_definition[0].arn
   launch_type     = "FARGATE"
-  desired_count   = 3
+  desired_count   = var.desired_count
   network_configuration {
     subnets          = var.subnets
     security_groups  = [aws_security_group.this[0].id]
     assign_public_ip = true
-  }
-
-  load_balancer {
-    target_group_arn = aws_lb_target_group.health_check[0].arn
-    container_name   = "otel-collector"
-    container_port   = 13133
   }
 
   load_balancer {
@@ -25,14 +19,14 @@ resource "aws_ecs_service" "this" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "this" {
+resource "aws_cloudwatch_log_group" "adot_service_log_group" {
   count = var.create_adot_service ? 1 : 0
 
   name              = "/ecs/${var.name}-otel-collector"
   retention_in_days = 7
 }
 
-resource "aws_ecs_task_definition" "this" {
+resource "aws_ecs_task_definition" "adot_task_definition" {
   count = var.create_adot_service ? 1 : 0
 
   family                   = "${var.name}-otel-collector"
@@ -46,7 +40,7 @@ resource "aws_ecs_task_definition" "this" {
   container_definitions = jsonencode([
     {
       name      = "otel-collector"
-      image     = var.otel_collector_image
+      image     = var.adot_collector_image
       cpu       = var.otel_collector_cpu
       memory    = var.otel_collector_memory
       essential = true
@@ -54,7 +48,7 @@ resource "aws_ecs_task_definition" "this" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.this[0].name
+          "awslogs-group"         = aws_cloudwatch_log_group.adot_service_log_group[0].name
           "awslogs-region"        = var.region
           "awslogs-stream-prefix" = "ecs"
         }
@@ -79,7 +73,7 @@ resource "aws_ecs_task_definition" "this" {
           value = var.amazon_prometheus_endpoint == null ? "${aws_prometheus_workspace.this[0].prometheus_endpoint}api/v1/remote_write" : "${var.amazon_prometheus_endpoint}api/v1/remote_write"
         },
         {
-          name = "AWS_REGION"
+          name  = "AWS_REGION"
           value = var.amazon_prometheus_endpoint_region
         }
       ]
