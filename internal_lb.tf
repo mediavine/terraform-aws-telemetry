@@ -3,7 +3,7 @@ data "aws_vpc" "this" {
 }
 
 resource "aws_lb" "this" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   name               = "${var.name}-internal-collector-lb"
   internal           = true
@@ -16,21 +16,21 @@ resource "aws_lb" "this" {
 # LB Listener Rules
 ################################################################################
 
-resource "aws_lb_listener" "health_check" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+# resource "aws_lb_listener" "health_check" {
+#   count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
 
-  load_balancer_arn = aws_lb.this[0].arn
-  port              = 13133
-  protocol          = "HTTP"
+#   load_balancer_arn = aws_lb.this[0].arn
+#   port              = 13133
+#   protocol          = "HTTP"
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.health_check[0].arn
-  }
-}
+#   default_action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.health_check[0].arn
+#   }
+# }
 
 resource "aws_lb_listener" "http" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   load_balancer_arn = aws_lb.this[0].arn
   port              = 4318
@@ -46,30 +46,30 @@ resource "aws_lb_listener" "http" {
 # LB Target Groups
 ################################################################################
 
-resource "aws_lb_target_group" "health_check" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+# resource "aws_lb_target_group" "health_check" {
+#   count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
 
-  name        = "${var.name}-internal-collector-tg"
-  port        = 13133
-  protocol    = "HTTP"
-  target_type = "ip"
-  vpc_id      = var.vpc_id
+#   name        = "${var.name}-internal-collector-tg"
+#   port        = 13133
+#   protocol    = "HTTP"
+#   target_type = "ip"
+#   vpc_id      = var.vpc_id
 
-  health_check {
-    path                = "/healthcheck"
-    protocol            = "HTTP"
-    interval            = 30
-    timeout             = 10
-    healthy_threshold   = 3
-    unhealthy_threshold = 3
-    matcher             = "200-399"
-  }
+#   health_check {
+#     path                = "/healthcheck"
+#     protocol            = "HTTP"
+#     interval            = 30
+#     timeout             = 10
+#     healthy_threshold   = 3
+#     unhealthy_threshold = 3
+#     matcher             = "200-399"
+#   }
 
-  depends_on = [aws_lb.this]
-}
+#   depends_on = [aws_lb.this]
+# }
 
 resource "aws_lb_target_group" "http" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   name        = "${var.name}-collector-http-tg"
   port        = 4318
@@ -79,7 +79,8 @@ resource "aws_lb_target_group" "http" {
 
   health_check {
     matcher = "200-499"
-    path    = "/v1/metrics"
+    path    = "/healthcheck"
+    port    = 13133
   }
 
   depends_on = [aws_lb.this]
@@ -89,7 +90,7 @@ resource "aws_lb_target_group" "http" {
 # Security Group & Rules
 ################################################################################
 resource "aws_security_group" "this" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   name        = "${var.name}-internal-collector-sg"
   description = "Security group for the internal collector load balancer"
@@ -97,7 +98,7 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_security_group_rule" "health_check" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   type              = "ingress"
   from_port         = 13133
@@ -108,7 +109,7 @@ resource "aws_security_group_rule" "health_check" {
 }
 
 resource "aws_security_group_rule" "http" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   type              = "ingress"
   from_port         = 4318
@@ -119,7 +120,7 @@ resource "aws_security_group_rule" "http" {
 }
 
 resource "aws_security_group_rule" "egress" {
-  count = var.enable_internal_lb && var.create_adot_service ? 1 : 0
+  count = var.enable_internal_lb && var.create_adot_service || var.enable_internal_lb && var.create_otel_collector_service ? 1 : 0
 
   type              = "egress"
   from_port         = 0
