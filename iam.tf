@@ -127,7 +127,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "cw_logs_policy_attachment_execution_role" {
-  count = var.create_adot_service ? 1 : 0
+  count = var.create_adot_service || var.create_otel_collector_service ? 1 : 0
 
   role       = aws_iam_role.execution_role[0].name
   policy_arn = aws_iam_policy.cw_logs_policy[0].arn
