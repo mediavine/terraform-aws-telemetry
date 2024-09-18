@@ -182,9 +182,7 @@ variable "custom_otel_config" {
   type = list(object({
     otel_config_file_path = string
   }))
-  default = [{
-    otel_config_file_path = null
-  }]
+  default = []
 }
 
 variable "desired_count" {
