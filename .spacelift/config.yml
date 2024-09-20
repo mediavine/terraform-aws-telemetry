@@ -4,9 +4,12 @@ runner_image: spacelift/runner:latest
 
 test_defaults:
   before_init:
-    - "curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash -s -- -b ./bin"
+    - "mkdir -p ./bin"
+    - "curl -L -o ./bin/tflint.zip https://github.com/terraform-linters/tflint/releases/download/v0.53.0/tflint_linux_amd64.zip"
+    - "unzip -o ./bin/tflint.zip -d ./bin"
+    - "chmod +x ./bin/tflint"
     - "export PATH=$PATH:./bin"
-    - "tflint --init && tflint"
+    - "./bin/tflint --init && ./bin/tflint"
     - "git-chglog -o CHANGELOG.md"
     - "terraform validate"
 tests:  
