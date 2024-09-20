@@ -182,7 +182,8 @@ variable "custom_otel_config" {
   type = list(object({
     otel_config_file_path = string
   }))
-  default = []
+  default     = []
+  description = "values for custom otel config. Only include the path to the otel config file at the moment"
 }
 
 variable "desired_count" {

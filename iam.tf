@@ -12,7 +12,7 @@ resource "aws_iam_policy" "cw_logs_policy" {
   description = "Policy to create and access adot logs"
 
   policy = templatefile("${path.module}/policies/cw_logs_access.json", {
-    name = "${var.name}",
+    name = var.name,
   })
 }
 
