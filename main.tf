@@ -3,7 +3,7 @@ locals {
 
   # if this is true, then this will error
   # only one otel collector service at a time
-  ecs_service_validator = !(var.create_adot_service && var.create_otel_collector_service)
+  ecs_service_validator = ! (var.create_adot_service && var.create_otel_collector_service)
 }
 
 resource "null_resource" "validate_otel_collector_service" {
