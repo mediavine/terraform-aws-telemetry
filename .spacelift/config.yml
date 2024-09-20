@@ -10,7 +10,6 @@ test_defaults:
     - "chmod +x ./bin/tflint"
     - "export PATH=$PATH:./bin"
     - "./bin/tflint --init && ./bin/tflint"
-    - "git-chglog -o CHANGELOG.md"
     - "terraform validate"
 tests:  
   - name: default
