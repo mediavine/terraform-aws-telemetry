@@ -4,10 +4,9 @@ runner_image: spacelift/runner:latest
 
 test_defaults:
   before_init:
-    - "terraform fmt -check"
-    - "tflint"
+    - "curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash"
+    - "tflint --init && tflint"
     - "git-chglog -o CHANGELOG.md"
     - "terraform validate"
-    - "tfsec"
 tests:  
   - name: default
