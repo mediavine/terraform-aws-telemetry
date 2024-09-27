@@ -4,9 +4,7 @@ output:
   file: README.md
   mode: replace
   template: |-
-    <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-    {{ .Content }}
-    <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+    {{/** End of file fixer */}}
 
 sections:
   hide:
