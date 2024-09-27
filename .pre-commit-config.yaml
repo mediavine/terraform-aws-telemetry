@@ -20,4 +20,5 @@ repos:
     - id: terraform_checkov
     - id: terraform_docs
       args:
+        - --hook-config=--path-to-file=README.MD
         - '--args=--config=.terraform-docs.yml'
