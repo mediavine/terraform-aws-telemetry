@@ -1,7 +1,7 @@
 formatter: markdown table
 
 output:
-  file: README.md
+  file: README.MD
   mode: replace
   template: |-
     {{/** End of file fixer */}}
