@@ -4,6 +4,7 @@ runner_image: spacelift/runner:latest
 
 test_defaults:
   before_init:
+    - "terraform init"
     - "mkdir -p ./bin"
     - "curl -L -o ./bin/tflint.zip https://github.com/terraform-linters/tflint/releases/download/v0.53.0/tflint_linux_amd64.zip"
     - "unzip -o ./bin/tflint.zip -d ./bin"
@@ -11,5 +12,5 @@ test_defaults:
     - "export PATH=$PATH:./bin"
     - "./bin/tflint --init && ./bin/tflint"
     - "terraform validate"
-tests:  
+tests:
   - name: default
