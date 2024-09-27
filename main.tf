@@ -13,7 +13,6 @@ resource "null_resource" "validate_otel_collector_service" {
     command = "echo 'Only one of create_adot_service or create_otel_collector_service can be true.'"
   }
 }
-
 ################################################################################
 # Workspace
 ################################################################################
