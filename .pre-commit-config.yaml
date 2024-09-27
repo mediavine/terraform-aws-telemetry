@@ -21,4 +21,7 @@ repos:
     - id: terraform_docs
       args:
         - --hook-config=--path-to-file=README.MD
+        - --hook-config=--add-to-existing-file=true
+        - --hook-config=--create-file-if-not-exist=true
+        - --hook-config=--use-standard-markers=true
         - '--args=--config=.terraform-docs.yml'
