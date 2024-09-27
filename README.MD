@@ -1,9 +1,12 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.35 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.3 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.6.3 |
 
 ## Providers
 
@@ -72,7 +75,7 @@ No modules.
 | <a name="input_create_otel_collector_service"></a> [create\_otel\_collector\_service](#input\_create\_otel\_collector\_service) | If true creates ecs service for otel-collector-contrib | `bool` | `false` | no |
 | <a name="input_create_prometheus"></a> [create\_prometheus](#input\_create\_prometheus) | Determines whether a resources will be created | `bool` | `true` | no |
 | <a name="input_create_workspace"></a> [create\_workspace](#input\_create\_workspace) | Determines whether a workspace will be created or to use an existing workspace | `bool` | `true` | no |
-| <a name="input_custom_otel_config"></a> [custom\_otel\_config](#input\_custom\_otel\_config) | n/a | <pre>list(object({<br>    otel_config_file_path = string<br>  }))</pre> | <pre>[<br>  {<br>    "otel_config_file_path": null<br>  }<br>]</pre> | no |
+| <a name="input_custom_otel_config"></a> [custom\_otel\_config](#input\_custom\_otel\_config) | values for custom otel config. Only include the path to the otel config file at the moment | <pre>list(object({<br>    otel_config_file_path = string<br>  }))</pre> | `[]` | no |
 | <a name="input_desired_count"></a> [desired\_count](#input\_desired\_count) | The number of instances of the task definition to place and keep running | `number` | `3` | no |
 | <a name="input_enable_internal_lb"></a> [enable\_internal\_lb](#input\_enable\_internal\_lb) | Determines whether an internal load balancer will be created | `bool` | `false` | no |
 | <a name="input_logging_configuration"></a> [logging\_configuration](#input\_logging\_configuration) | The logging configuration of the prometheus workspace. | `map(string)` | `{}` | no |
@@ -96,3 +99,7 @@ No modules.
 | <a name="output_workspace_arn"></a> [workspace\_arn](#output\_workspace\_arn) | Amazon Resource Name (ARN) of the workspace |
 | <a name="output_workspace_id"></a> [workspace\_id](#output\_workspace\_id) | Identifier of the workspace |
 | <a name="output_workspace_prometheus_endpoint"></a> [workspace\_prometheus\_endpoint](#output\_workspace\_prometheus\_endpoint) | Prometheus endpoint available for this workspace |
+<!-- END_TF_DOCS -->
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+README.MD updated successfully
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
