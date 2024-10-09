@@ -17,6 +17,8 @@ repos:
       args:
         - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
     - id: terraform_validate
+      args:
+        - --hook-config=--retry-once-with-cleanup=true
     # - id: terraform_checkov
     - id: terraform_docs
       args:

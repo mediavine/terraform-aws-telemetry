@@ -186,6 +186,12 @@ variable "custom_otel_config" {
   description = "values for custom otel config. Only include the path to the otel config file at the moment"
 }
 
+variable "custom_otel_secrets" {
+  type        = list(string)
+  default     = []
+  description = "Add secrets to the otel collector tasks definitions. Values must be updated via console or cli"
+}
+
 variable "desired_count" {
   description = "The number of instances of the task definition to place and keep running"
   type        = number
