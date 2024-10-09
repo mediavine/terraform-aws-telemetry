@@ -1,0 +1,42 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+processors:
+  attributes:
+    actions:
+      - key: time
+        action: delete
+      - key: timestamp
+        action: upsert
+        from_attribute: time
+exporters:
+  influxdb:
+    endpoint: https://thebiggestt-3xfrhtmhy7jf7c.us-east-1.timestream-influxdb.amazonaws.com:8086/
+    bucket: otel
+    org: mediavine
+    token: ${INFLUXDB_TOKEN}
+    metrics_schema: telegraf-prometheus-v1
+    payload_max_lines: 5000
+
+  logging:
+    loglevel: warn
+
+extensions:
+  health_check:
+      endpoint: 0.0.0.0:13133
+
+service:
+  telemetry:
+    logs:
+      level: debug
+      encoding: json
+  extensions: [health_check]
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [attributes]
+      exporters: [logging, influxdb]

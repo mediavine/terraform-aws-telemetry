@@ -6,6 +6,13 @@ locals {
     }
   ]
 
+  dynamic_secrets = [
+    for secret in var.custom_otel_secrets : {
+      name      = upper(secret)
+      valueFrom = aws_ssm_parameter.custom_otel_parameters[secret].arn
+    }
+  ]
+
   custom_config_environment = [
 
     {
@@ -14,7 +21,18 @@ locals {
     }
   ]
 
-  environment = var.custom_otel_config[0].otel_config_file_path != null ? local.custom_config_environment : local.default_config_environment
+  environment = var.custom_otel_config[0].otel_config_file_path != null ? concat(local.custom_config_environment, local.dynamic_secrets) : local.default_config_environment
+}
+
+resource "aws_ssm_parameter" "custom_otel_parameters" {
+  for_each = toset(var.custom_otel_secrets)
+  name     = "/${upper(var.name)}/${each.value}"
+  type     = "String"
+  value    = "example_value" # Replace with actual value in console or with cli
+
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
 
 resource "random_string" "this" {
@@ -104,4 +122,5 @@ resource "aws_ecs_task_definition" "otel_collector_task_definition" {
       secrets = local.environment
     }
   ])
+  depends_on = [aws_ssm_parameter.custom_otel_parameters]
 }
