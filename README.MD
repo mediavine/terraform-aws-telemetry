@@ -12,9 +12,9 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.70.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.91.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.7.1 |
 
 ## Modules
 
@@ -70,13 +70,13 @@ No modules.
 | <a name="input_alert_manager_definition"></a> [alert\_manager\_definition](#input\_alert\_manager\_definition) | The alert manager definition that you want to be applied. See more in the [AWS Docs](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alert-manager.html) | `string` | `"alertmanager_config: |\n  route:\n    receiver: 'default'\n  receivers:\n    - name: 'default'\n"` | no |
 | <a name="input_amazon_prometheus_endpoint"></a> [amazon\_prometheus\_endpoint](#input\_amazon\_prometheus\_endpoint) | The endpoint of the prometheus workspace | `string` | `null` | no |
 | <a name="input_amazon_prometheus_endpoint_region"></a> [amazon\_prometheus\_endpoint\_region](#input\_amazon\_prometheus\_endpoint\_region) | The region of the prometheus workspace | `string` | `"us-east-1"` | no |
-| <a name="input_autoscaling_configuration"></a> [autoscaling\_configuration](#input\_autoscaling\_configuration) | The autoscaling configuration | <pre>list(object({<br>    min_capacity           = number<br>    max_capacity           = number<br>    cpu_threshold_value    = number<br>    memory_threshold_value = number<br>    scale_in_cooldown      = number<br>    scale_out_cooldown     = number<br>  }))</pre> | <pre>[<br>  {<br>    "cpu_threshold_value": 50,<br>    "max_capacity": 10,<br>    "memory_threshold_value": 50,<br>    "min_capacity": 3,<br>    "scale_in_cooldown": 300,<br>    "scale_out_cooldown": 300<br>  }<br>]</pre> | no |
+| <a name="input_autoscaling_configuration"></a> [autoscaling\_configuration](#input\_autoscaling\_configuration) | The autoscaling configuration | <pre>list(object({<br/>    min_capacity           = number<br/>    max_capacity           = number<br/>    cpu_threshold_value    = number<br/>    memory_threshold_value = number<br/>    scale_in_cooldown      = number<br/>    scale_out_cooldown     = number<br/>  }))</pre> | <pre>[<br/>  {<br/>    "cpu_threshold_value": 50,<br/>    "max_capacity": 10,<br/>    "memory_threshold_value": 50,<br/>    "min_capacity": 3,<br/>    "scale_in_cooldown": 300,<br/>    "scale_out_cooldown": 300<br/>  }<br/>]</pre> | no |
 | <a name="input_cluster"></a> [cluster](#input\_cluster) | The name of the ECS cluster | `string` | `""` | no |
 | <a name="input_create_adot_service"></a> [create\_adot\_service](#input\_create\_adot\_service) | Determines whether the ECS service will be created | `bool` | `false` | no |
 | <a name="input_create_otel_collector_service"></a> [create\_otel\_collector\_service](#input\_create\_otel\_collector\_service) | If true creates ecs service for otel-collector-contrib | `bool` | `false` | no |
 | <a name="input_create_prometheus"></a> [create\_prometheus](#input\_create\_prometheus) | Determines whether a resources will be created | `bool` | `true` | no |
 | <a name="input_create_workspace"></a> [create\_workspace](#input\_create\_workspace) | Determines whether a workspace will be created or to use an existing workspace | `bool` | `true` | no |
-| <a name="input_custom_otel_config"></a> [custom\_otel\_config](#input\_custom\_otel\_config) | values for custom otel config. Only include the path to the otel config file at the moment | <pre>list(object({<br>    otel_config_file_path = string<br>  }))</pre> | `[]` | no |
+| <a name="input_custom_otel_config"></a> [custom\_otel\_config](#input\_custom\_otel\_config) | values for custom otel config. Only include the path to the otel config file at the moment | <pre>list(object({<br/>    otel_config_file_path = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_custom_otel_secrets"></a> [custom\_otel\_secrets](#input\_custom\_otel\_secrets) | Add secrets to the otel collector tasks definitions. Values must be updated via console or cli | `list(string)` | `[]` | no |
 | <a name="input_desired_count"></a> [desired\_count](#input\_desired\_count) | The number of instances of the task definition to place and keep running | `number` | `3` | no |
 | <a name="input_enable_internal_lb"></a> [enable\_internal\_lb](#input\_enable\_internal\_lb) | Determines whether an internal load balancer will be created | `bool` | `false` | no |

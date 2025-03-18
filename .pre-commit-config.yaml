@@ -19,7 +19,9 @@ repos:
     - id: terraform_validate
       args:
         - --hook-config=--retry-once-with-cleanup=true
-    # - id: terraform_checkov
+    - id: terraform_checkov
+      args:
+        - --args=--check CKV2_AWS_20,CKV2_AWS_35,CKV2_AWS_34,CKV2_AWS_36,CKV2_AWS_56,CKV2_AWS_40,CKV2_AWS_30,CKV2_AWS_27,CKV2_AWS_8,CKV2_AWS_69,CKV2_AWS_38,CKV2_AWS_39,CKV2_AWS_62,CKV2_AWS_11,CKV_AWS_19,CKV_AWS_18
     - id: terraform_docs
       args:
         - --hook-config=--path-to-file=README.MD
