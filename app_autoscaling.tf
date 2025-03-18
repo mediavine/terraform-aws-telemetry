@@ -19,8 +19,8 @@ resource "aws_appautoscaling_policy" "cpu_utilization" {
 
   target_tracking_scaling_policy_configuration {
     target_value = var.autoscaling_configuration[0].cpu_threshold_value
-    # amount of time, in seconds, 
-    # after a scale in or scale out activity has completed 
+    # amount of time, in seconds,
+    # after a scale in or scale out activity has completed
     # where further scaling activities are suspended
     scale_in_cooldown  = var.autoscaling_configuration[0].scale_in_cooldown
     scale_out_cooldown = var.autoscaling_configuration[0].scale_out_cooldown
@@ -42,8 +42,8 @@ resource "aws_appautoscaling_policy" "memory_utilization" {
 
   target_tracking_scaling_policy_configuration {
     target_value = var.autoscaling_configuration[0].memory_threshold_value
-    # amount of time, in seconds, 
-    # after a scale in or scale out activity has completed 
+    # amount of time, in seconds,
+    # after a scale in or scale out activity has completed
     # where further scaling activities are suspended
     scale_in_cooldown  = var.autoscaling_configuration[0].scale_in_cooldown
     scale_out_cooldown = var.autoscaling_configuration[0].scale_out_cooldown
@@ -53,4 +53,3 @@ resource "aws_appautoscaling_policy" "memory_utilization" {
     }
   }
 }
-
